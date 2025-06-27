@@ -755,27 +755,36 @@
             const hintBtn = document.getElementById('hintBtn');
             if (hintBtn.disabled || gameOver) return;
 
-            // Find empty positions in the current row
-            const emptyPositions = [];
+            // Get all letters that have been guessed in the current row
+            const guessedLetters = [];
             for (let i = 0; i < 7; i++) {
                 const tile = document.getElementById(`tile-${currentRow}-${i}`);
-                if (!tile.textContent) {
-                    emptyPositions.push(i);
+                if (tile.textContent) {
+                    guessedLetters.push({
+                        position: i,
+                        letter: tile.textContent
+                    });
                 }
             }
 
-            // Find an incorrect position to place a hint
-            const correctPositions = [];
+            // Find positions where we could reveal a new correct letter
+            const possibleHints = [];
             for (let i = 0; i < 7; i++) {
                 const tile = document.getElementById(`tile-${currentRow}-${i}`);
-                if (!tile.textContent || tile.textContent !== targetWord[i]) {
-                    correctPositions.push(i);
+                const isGuessed = guessedLetters.some(g => g.position === i);
+                const isCorrectlyGuessed = isGuessed && tile.textContent === targetWord[i];
+                
+                // Add to possible hints if:
+                // 1. Position is empty, OR
+                // 2. Position has an incorrect letter
+                if (!isGuessed || (isGuessed && !isCorrectlyGuessed)) {
+                    possibleHints.push(i);
                 }
             }
 
-            if (correctPositions.length > 0) {
-                // Choose a random position to reveal
-                const hintPos = correctPositions[Math.floor(Math.random() * correctPositions.length)];
+            if (possibleHints.length > 0) {
+                // Choose a random position from possible hints
+                const hintPos = possibleHints[Math.floor(Math.random() * possibleHints.length)];
                 const tile = document.getElementById(`tile-${currentRow}-${hintPos}`);
                 
                 // Place the correct letter
