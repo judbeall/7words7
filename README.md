@@ -2,6 +2,8 @@
 
 A 7-letter word guessing game inspired by Wordle. Try to guess the seven-letter word in seven attempts!
 
+Visit the game at: https://judbeall.github.io/7words7/
+
 ## Features
 - 7-letter words
 - 7 attempts to guess
